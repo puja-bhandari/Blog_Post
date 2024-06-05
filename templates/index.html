@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Blog</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f4f8;
+            margin: 0;
+            padding: 0;
+        }
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+            background-color: #4a90e2;
+            color: white;
+        }
+        .navbar .logo {
+            display: flex;
+            align-items: center;
+        }
+        .navbar .logo i {
+            margin-right: 0.5rem;
+        }
+        .navbar a {
+            color: white;
+            text-decoration: none;
+            margin-left: 1rem;
+        }
+        .container {
+            display: flex;
+            padding: 2rem;
+        }
+        .form-box {
+            background: #ffffff;
+            padding: 1.5rem;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            width: 30%;
+            margin-right: 2rem;
+        }
+        .form-box h3 {
+            margin-top: 0;
+        }
+        .form-box .form-group {
+            margin-bottom: 1rem;
+        }
+        .form-box label {
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+        .form-box input,
+        .form-box textarea,
+        .form-box button {
+            width: 100%;
+            padding: 0.5rem;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+        .form-box button {
+            background-color: #4a90e2;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        .post-list {
+            flex-grow: 1;
+        }
+        .post-box {
+            background: #ffffff;
+            padding: 1.5rem;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+        }
+        .post-box img {
+            width: 100px;
+            border-radius: 10px;
+            margin-right: 1rem;
+        }
+        .post-details {
+            flex-grow: 1;
+        }
+        .post-timing {
+            font-size: 0.9em;
+            color: #999;
+            margin-bottom: 0.5rem;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="logo">
+            <i class="fas fa-blog"></i> My Blog
+        </div>
+        <div>
+            
+            <a href="{% url 'logout_view' %}">Logout</a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="form-box">
+            <h3>Create Post</h3>
+            <form method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="title">Title</label>
+                    <input type="text" id="title" name="title" >
+                </div>
+                <div class="form-group">
+                    <label for="content">Content</label>
+                    <textarea id="content" name="content" rows="3" value="content"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="image">Image</label>
+                    <input type="file" id="image" name="image" value="image">
+                </div>
+                <button type="submit">Submit</button>
+            </form>
+        </div>
+        {% for Post in pro %}
+        <div class="post-list">
+            <div class="post-box">
+                <img src="{{ Post.image.url }}" alt="Post Image">
+                <div class="post-details">
+                    <div class="post-timing"></div>
+                  <h2>{{Post.title}}</h2>  
+                    <div class="post-content">{{Post.content}}</div>
+                </div>
+                <a href="{% url 'edit' Post.id %}"><button type="edit">Edit</button></a>
+                <form method="POST" action="{% url 'remove' Post.id%}">
+                    {% csrf_token %}
+                    <button type="del">Delete</button>
+                </form>
+            </div>
+           
+            {% endfor %}
+        </div>
+    </div>
+
+    
+</body>
+</html>
