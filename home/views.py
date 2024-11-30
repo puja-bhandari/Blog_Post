@@ -14,13 +14,17 @@ def index(request):
             return redirect('index')
     
     pro = Post.objects.all()
+    if request.method == "GET":
+        st= request.GET.get('searchname')
+        if st!=None:
+            pro = Post.objects.filter(title__icontains = st)
     return render(request, 'index.html', {'form': form, 'pro': pro})
 
 def edit(request, id):
     
-    profile = get_object_or_404(Post, id=id)
+    pro = get_object_or_404(Post, id=id)
     if request.method == 'POST':
-        form = PostForm(request.FILES, request.POST , instance=profile)
+        form = PostForm(request.FILES, request.POST , instance=pro)
         if form.is_valid:
             form.save()
             messages.success(request, 'Post updated successfully!')
@@ -28,8 +32,8 @@ def edit(request, id):
         else:
             messages.error(request, 'Please correct the error below.')
     else:
-        form = PostForm(instance=profile)
-    return render(request,'edit.html', {'form':form, 'profile':profile})
+        form = PostForm(instance=pro)
+    return render(request,'edit.html', {'form':form})
 
 def remove(request, id):
     profile = get_object_or_404(Post, pk=id)
